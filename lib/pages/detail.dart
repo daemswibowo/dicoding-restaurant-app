@@ -45,6 +45,8 @@ class RestaurantDetailPage extends StatelessWidget {
                   Text(
                     restaurant.description,
                     style: const TextStyle(fontSize: 12),
+                    maxLines: 4,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const Padding(padding: EdgeInsets.all(8)),
                   const MenuTitle(title: 'Foods'),
