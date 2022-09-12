@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class MenuItemCard extends StatelessWidget {
+class MenuListItemCard extends StatelessWidget {
   final String name;
   final String price;
 
-  const MenuItemCard({Key? key, required this.name, required this.price}) : super(key: key);
+  const MenuListItemCard({Key? key, required this.name, required this.price}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

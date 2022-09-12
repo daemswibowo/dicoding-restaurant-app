@@ -1,8 +1,8 @@
-import 'package:restaurant_app/models/menu_item.dart';
+import 'package:restaurant_app/models/menu_list_item.dart';
 
 class Menu {
-  final List<MenuItem> foods;
-  final List<MenuItem> drinks;
+  final List<MenuListItem> foods;
+  final List<MenuListItem> drinks;
 
   Menu({
     required this.foods,
@@ -10,7 +10,7 @@ class Menu {
   });
 
   factory Menu.fromJson(Map<String, dynamic> menu) => Menu(
-    foods: parseMenuItems(menu['foods']),
-    drinks: parseMenuItems(menu['drinks']),
+    foods: parseMenuListItems(menu['foods']),
+    drinks: parseMenuListItems(menu['drinks']),
   );
 }
