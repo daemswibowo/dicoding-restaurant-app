@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/models/restaurant.dart';
+import 'package:restaurant_app/utils/image_util.dart';
 import 'package:restaurant_app/widgets/atoms/menu_title.dart';
 import 'package:restaurant_app/widgets/organisms/menu_list.dart';
 
@@ -13,6 +14,8 @@ class RestaurantDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final menus = restaurant.menus;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(restaurant.name),
@@ -22,7 +25,8 @@ class RestaurantDetailPage extends StatelessWidget {
           children: [
             Hero(
                 tag: restaurant.pictureId,
-                child: Image.network(restaurant.pictureId)),
+                child: Image.network(
+                    generateImageUrl(restaurant.pictureId, 'medium'))),
             Padding(
               padding: const EdgeInsets.all(10),
               child: Column(
@@ -51,11 +55,17 @@ class RestaurantDetailPage extends StatelessWidget {
                   const Padding(padding: EdgeInsets.all(8)),
                   const MenuTitle(title: 'Foods'),
                   const Padding(padding: EdgeInsets.all(4)),
-                  MenuList(items: restaurant.menus.foods),
+                  MenuList(
+                      items: restaurant.menus != null
+                          ? restaurant.menus?.foods
+                          : []),
                   const Padding(padding: EdgeInsets.all(8)),
                   const MenuTitle(title: 'Drinks'),
                   const Padding(padding: EdgeInsets.all(4)),
-                  MenuList(items: restaurant.menus.drinks),
+                  MenuList(
+                      items: restaurant.menus != null
+                          ? restaurant.menus?.drinks
+                          : []),
                 ],
               ),
             ),
