@@ -9,8 +9,10 @@ class Menu {
     required this.drinks
   });
 
-  factory Menu.fromJson(Map<String, dynamic> menu) => Menu(
-    foods: parseMenuListItems(menu['foods']),
-    drinks: parseMenuListItems(menu['drinks']),
-  );
+  factory Menu.fromJson(Map<String, dynamic> menu) {
+    return Menu(
+      foods: parseMenuListItems(menu['foods']),
+      drinks: parseMenuListItems(menu['drinks']),
+    );
+  }
 }

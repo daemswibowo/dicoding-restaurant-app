@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/models/restaurant.dart';
 import 'package:restaurant_app/pages/detail.dart';
+import 'package:restaurant_app/utils/image_util.dart';
 
 class RestaurantListItem extends StatelessWidget {
   final Restaurant restaurant;
@@ -16,7 +17,7 @@ class RestaurantListItem extends StatelessWidget {
       leading: Hero(
         tag: restaurant.pictureId,
         child: Image.network(
-          restaurant.pictureId,
+          generateImageUrl(restaurant.pictureId, 'medium'),
           width: 100,
         ),
       ),
@@ -24,7 +25,7 @@ class RestaurantListItem extends StatelessWidget {
       subtitle: Text("🧭 ${restaurant.city}\n⭐️ ${restaurant.rating}"),
       onTap: () {
         Navigator.pushNamed(context, RestaurantDetailPage.name,
-            arguments: restaurant);
+            arguments: restaurant.id);
       },
     );
   }
