@@ -5,7 +5,6 @@ import 'package:restaurant_app/services/restaurant_service.dart';
 import 'package:restaurant_app/stores/restaurant_store.dart';
 import 'package:restaurant_app/widgets/atoms/home/list_title.dart';
 import 'package:restaurant_app/widgets/molecules/home/app_bar.dart';
-import 'package:restaurant_app/widgets/molecules/runtime_error.dart';
 import '../widgets/organisms/restaurant_list.dart';
 
 class HomePage extends StatefulWidget {
@@ -73,11 +72,22 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
                 child: const ListTitle(),
               ),
-              Expanded(
-                  child: RestaurantList(
-                    restaurants: restaurants,
-                    loading: _loading,
-                  ))
+              (_error && !_loading)
+                  ? AlertDialog(
+                      title: const Text("Ouch! Something happen.."),
+                      content: const Text(
+                          'Cannot get data, please check your internet connection'),
+                      actions: [
+                        TextButton(
+                            onPressed: () => loadRestaurant(),
+                            child: const Text('Try again'))
+                      ],
+                    )
+                  : Expanded(
+                      child: RestaurantList(
+                      restaurants: restaurants,
+                      loading: _loading,
+                    ))
             ],
           )), // body: RestaurantList(),
     );

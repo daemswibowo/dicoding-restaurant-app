@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
-
 import 'package:http/http.dart' as http;
 import 'package:restaurant_app/models/restaurant.dart';
 import 'package:restaurant_app/services/request_adapter_service.dart';

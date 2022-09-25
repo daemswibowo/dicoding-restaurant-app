@@ -65,58 +65,69 @@ class _RestaurantDetailState extends State<RestaurantDetailPage> {
                 : restaurant.name),
       ),
       body: SingleChildScrollView(
-        child: !_loading && !_error
-            ? Column(
-                children: [
-                  Hero(
-                      tag: restaurant.pictureId,
-                      child: Image.network(
-                          generateImageUrl(restaurant.pictureId, 'medium'))),
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          restaurant.name,
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        const Padding(padding: EdgeInsets.all(2)),
-                        Text(
-                          "🧭 ${restaurant.city}",
-                          style: const TextStyle(fontSize: 12),
-                        ),
-                        const Padding(padding: EdgeInsets.all(8)),
-                        Text(
-                          restaurant.description,
-                          style: const TextStyle(fontSize: 12),
-                          maxLines: 4,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const Padding(padding: EdgeInsets.all(8)),
-                        const MenuTitle(title: 'Foods'),
-                        const Padding(padding: EdgeInsets.all(4)),
-                        MenuList(
-                            items: restaurant.menus != null
-                                ? restaurant.menus?.foods
-                                : []),
-                        const Padding(padding: EdgeInsets.all(8)),
-                        const MenuTitle(title: 'Drinks'),
-                        const Padding(padding: EdgeInsets.all(4)),
-                        MenuList(
-                            items: restaurant.menus != null
-                                ? restaurant.menus?.drinks
-                                : []),
-                      ],
-                    ),
-                  ),
+        child: (_error && !_loading)
+            ? AlertDialog(
+                title: const Text("Ouch! Something happen.."),
+                content: const Text(
+                    'Cannot get data, please check your internet connection'),
+                actions: [
+                  TextButton(
+                      onPressed: () => loadDetail(),
+                      child: const Text('Try again'))
                 ],
               )
-            : const Center(child: Text('Loading')),
+            : !_loading
+                ? Column(
+                    children: [
+                      Hero(
+                          tag: restaurant.pictureId,
+                          child: Image.network(generateImageUrl(
+                              restaurant.pictureId, 'medium'))),
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              restaurant.name,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            const Padding(padding: EdgeInsets.all(2)),
+                            Text(
+                              "🧭 ${restaurant.city}",
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                            const Padding(padding: EdgeInsets.all(8)),
+                            Text(
+                              restaurant.description,
+                              style: const TextStyle(fontSize: 12),
+                              maxLines: 4,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const Padding(padding: EdgeInsets.all(8)),
+                            const MenuTitle(title: 'Foods'),
+                            const Padding(padding: EdgeInsets.all(4)),
+                            MenuList(
+                                items: restaurant.menus != null
+                                    ? restaurant.menus?.foods
+                                    : []),
+                            const Padding(padding: EdgeInsets.all(8)),
+                            const MenuTitle(title: 'Drinks'),
+                            const Padding(padding: EdgeInsets.all(4)),
+                            MenuList(
+                                items: restaurant.menus != null
+                                    ? restaurant.menus?.drinks
+                                    : []),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                : const Center(child: Text('Loading')),
       ),
     );
   }
