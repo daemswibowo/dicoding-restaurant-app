@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:restaurant_app/models/category.dart';
 import 'package:restaurant_app/models/menu.dart';
 
