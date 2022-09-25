@@ -25,7 +25,7 @@ class RestaurantListItem extends StatelessWidget {
       subtitle: Text("🧭 ${restaurant.city}\n⭐️ ${restaurant.rating}"),
       onTap: () {
         Navigator.pushNamed(context, RestaurantDetailPage.name,
-            arguments: restaurant);
+            arguments: restaurant.id);
       },
     );
   }

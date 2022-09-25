@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-const Color primaryColor = Color(0xFFFFFFFF);
+const Color primaryColor = Colors.lightBlue;
 const Color secondaryColor = Colors.lightGreen;
 
 final TextTheme myTextTheme = TextTheme(

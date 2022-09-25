@@ -26,6 +26,37 @@ class RestaurantService extends RequestAdapterService {
       });
     }
   }
+
+  Future<RestaurantSearchResponse> search(String query) async {
+    final http.Response response = await requestGet("$_url/search?q=$query");
+
+    if (response.statusCode == 200) {
+      final searchResponse =
+          RestaurantSearchResponse.fromJson(json.decode(response.body));
+
+      return searchResponse;
+    } else {
+      throw Exception({
+        'message': 'Failed to load restaurant list',
+        'response': response.body
+      });
+    }
+  }
+
+  Future<RestaurantDetailResponse> detail(String restaurantId) async {
+    final http.Response response = await requestGet("$_url/detail/$restaurantId");
+
+    if (response.statusCode == 200) {
+      final RestaurantDetailResponse detailResponse =
+          RestaurantDetailResponse.fromJson(json.decode(response.body));
+      return detailResponse;
+    } else {
+      throw Exception({
+        'message': 'Failed to load restaurant detail',
+        'response': response.body
+      });
+    }
+  }
 }
 
 final RestaurantService restaurantService = RestaurantService();

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:restaurant_app/models/restaurant.dart';
-import 'package:restaurant_app/pages/detail.dart';
 import 'package:restaurant_app/pages/home.dart';
+import 'package:restaurant_app/routes.dart';
 import 'package:restaurant_app/stores/restaurant_store.dart';
 import 'package:restaurant_app/styles.dart';
 
@@ -25,17 +24,12 @@ class RestaurantApp extends StatelessWidget {
           colorScheme: Theme.of(context).colorScheme.copyWith(
                 primary: primaryColor,
                 onPrimary: Colors.black,
-                secondary: secondaryColor,/**/
+                secondary: secondaryColor,
               ),
           textTheme: myTextTheme,
         ),
         initialRoute: HomePage.name,
-        routes: {
-          HomePage.name: (context) => const HomePage(),
-          RestaurantDetailPage.name: (context) => RestaurantDetailPage(
-              restaurant:
-                  ModalRoute.of(context)?.settings.arguments as Restaurant),
-        },
+        routes: routes,
       ),
     );
   }

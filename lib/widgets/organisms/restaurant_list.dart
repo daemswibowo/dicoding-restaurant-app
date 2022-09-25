@@ -1,41 +1,75 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:restaurant_app/models/restaurant.dart';
-import 'package:restaurant_app/services/restaurant_service.dart';
-import 'package:restaurant_app/stores/restaurant_store.dart';
 import 'package:restaurant_app/widgets/molecules/restaurant_list_item.dart';
+import 'package:skeleton_loader/skeleton_loader.dart';
 
-class RestaurantList extends StatefulWidget {
-  const RestaurantList({Key? key}) : super(key: key);
+class RestaurantList extends StatelessWidget {
+  final List<Restaurant> restaurants;
+  final bool loading;
 
-  @override
-  State<StatefulWidget> createState() => _RestaurantListState();
-}
-
-class _RestaurantListState extends State<RestaurantList> {
-  @override
-  void initState() {
-    super.initState();
-    final restaurantStore =
-        Provider.of<RestaurantStore>(context, listen: false);
-
-    restaurantService
-        .list()
-        .then((RestaurantListResponse restaurantListResponse) {
-      restaurantStore.setItems(restaurantListResponse.restaurants);
-    });
-  }
+  const RestaurantList({super.key, required this.restaurants, required this.loading});
 
   @override
   Widget build(BuildContext context) {
-    final restaurantStore = Provider.of<RestaurantStore>(context, listen: true);
-    final restaurants = restaurantStore.items;
+    final screenWidth = MediaQuery.of(context).size.width;
 
-    return ListView.builder(
-      itemCount: restaurantStore.total,
-      itemBuilder: (context, index) {
-        return RestaurantListItem(restaurant: restaurants[index]);
-      },
-    );
+    if (loading) {
+      return buildRestaurantListSkeleton(screenWidth);
+    } else {
+      return ListView.builder(
+        itemCount: restaurants.length,
+        padding: const EdgeInsets.all(0),
+        itemBuilder: (context, index) {
+          return RestaurantListItem(restaurant: restaurants[index]);
+        },
+      );
+    }
+  }
+
+  SingleChildScrollView buildRestaurantListSkeleton(double screenWidth) {
+    return SingleChildScrollView(
+        padding: const EdgeInsets.only(left: 16, right: 16, top: 0),
+        child: SkeletonLoader(
+          builder: Row(
+            children: <Widget>[
+              Card(
+                child: SizedBox(
+                  width: screenWidth * 0.3,
+                  height: 68,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const Card(
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 16,
+                      ),
+                    ),
+                    Card(
+                      child: SizedBox(
+                        width: screenWidth * 0.3,
+                        height: 12,
+                      ),
+                    ),
+                    Card(
+                      child: SizedBox(
+                        width: screenWidth * 0.4,
+                        height: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          items: 6,
+          period: const Duration(seconds: 2),
+          highlightColor: Colors.white,
+          direction: SkeletonDirection.ltr,
+        ));
   }
 }
