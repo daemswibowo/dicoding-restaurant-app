@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/pages/home.dart';
 import 'package:restaurant_app/routes.dart';
+import 'package:restaurant_app/services/restaurant_service.dart';
 import 'package:restaurant_app/stores/restaurant_store.dart';
 import 'package:restaurant_app/styles.dart';
 
@@ -16,7 +17,7 @@ class RestaurantApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => RestaurantStore(),
+      create: (context) => RestaurantStore(restaurantService: RestaurantService()),
       child: MaterialApp(
         title: 'Restaurant App',
         theme: ThemeData(

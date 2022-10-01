@@ -7,55 +7,16 @@ import 'package:restaurant_app/widgets/atoms/home/list_title.dart';
 import 'package:restaurant_app/widgets/molecules/home/app_bar.dart';
 import '../widgets/organisms/restaurant_list.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   static const name = '/home';
 
   const HomePage({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  late bool _loading = false;
-  late bool _error = false;
-
-  @override
-  void initState() {
-    super.initState();
-    loadRestaurant();
-  }
-
-  // load restaurant data
-  loadRestaurant() {
-    setLoading(true);
-    setState(() {
-      _error = false;
-    });
-    final restaurantStore =
-        Provider.of<RestaurantStore>(context, listen: false);
-
-    restaurantService
-        .list()
-        .then((RestaurantListResponse restaurantListResponse) {
-      restaurantStore.setItems(restaurantListResponse.restaurants);
-    }).catchError((e) {
-      setState(() {
-        _error = true;
-      });
-    }).whenComplete(() => setLoading(false));
-  }
-
-  setLoading(bool loading) {
-    setState(() {
-      _loading = loading;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     final restaurantStore = Provider.of<RestaurantStore>(context, listen: true);
     final restaurants = restaurantStore.items;
+
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -72,21 +33,21 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
                 child: const ListTitle(),
               ),
-              (_error && !_loading)
+              (restaurantStore.error && !restaurantStore.loading)
                   ? AlertDialog(
                       title: const Text("Ouch! Something happen.."),
                       content: const Text(
                           'Cannot get data, please check your internet connection'),
                       actions: [
                         TextButton(
-                            onPressed: () => loadRestaurant(),
+                            onPressed: () => restaurantStore.fetchRestaurantList(),
                             child: const Text('Try again'))
                       ],
                     )
                   : Expanded(
                       child: RestaurantList(
                       restaurants: restaurants,
-                      loading: _loading,
+                      loading: restaurantStore.loading,
                     ))
             ],
           )), // body: RestaurantList(),

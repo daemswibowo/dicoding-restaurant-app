@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:restaurant_app/models/restaurant.dart';
 import 'package:restaurant_app/services/restaurant_service.dart';
+import 'package:restaurant_app/stores/restaurant_store.dart';
 import 'package:restaurant_app/utils/image_util.dart';
+import 'package:restaurant_app/widgets/atoms/expandable_text.dart';
 import 'package:restaurant_app/widgets/atoms/menu_title.dart';
 import 'package:restaurant_app/widgets/organisms/menu_list.dart';
 
@@ -17,10 +20,6 @@ class RestaurantDetailPage extends StatefulWidget {
 }
 
 class _RestaurantDetailState extends State<RestaurantDetailPage> {
-  late bool _loading = false;
-  late bool _error = false;
-  late Restaurant restaurant;
-
   @override
   void initState() {
     super.initState();
@@ -29,43 +28,29 @@ class _RestaurantDetailState extends State<RestaurantDetailPage> {
 
   // load restaurant data
   loadDetail() {
-    setLoading(true);
-    setState(() {
-      _error = false;
-    });
-
-    restaurantService
-        .detail(widget.restaurantId)
-        .then((RestaurantDetailResponse response) {
-      setState(() {
-        restaurant = response.restaurant;
-      });
-    }).catchError((e) {
-      setState(() {
-        _error = true;
-      });
-    }).whenComplete(() => setLoading(false));
-  }
-
-  setLoading(bool loading) {
-    setState(() {
-      _loading = loading;
-    });
+    final restaurantStore =
+        Provider.of<RestaurantStore>(context, listen: false);
+    restaurantStore.fetchDetail(widget.restaurantId);
   }
 
   @override
   Widget build(BuildContext context) {
+    final restaurantStore = Provider.of<RestaurantStore>(context, listen: true);
+    final loading = restaurantStore.loading;
+    final error = restaurantStore.error;
+    final restaurant = restaurantStore.item;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text(_loading
+        title: Text(loading
             ? 'Loading...'
-            : _error
+            : error
                 ? 'Failed'
-                : restaurant.name),
+                : restaurant?.name ?? 'hello'),
       ),
       body: SingleChildScrollView(
-        child: (_error && !_loading)
+        child: (error && !loading)
             ? AlertDialog(
                 title: const Text("Ouch! Something happen.."),
                 content: const Text(
@@ -76,7 +61,7 @@ class _RestaurantDetailState extends State<RestaurantDetailPage> {
                       child: const Text('Try again'))
                 ],
               )
-            : !_loading
+            : !loading && restaurant != null
                 ? Column(
                     children: [
                       Hero(
@@ -98,16 +83,11 @@ class _RestaurantDetailState extends State<RestaurantDetailPage> {
                             ),
                             const Padding(padding: EdgeInsets.all(2)),
                             Text(
-                              "🧭 ${restaurant.city}",
+                              "🧭 ${restaurant.city} ⭐️ ${restaurant.rating}",
                               style: const TextStyle(fontSize: 12),
                             ),
                             const Padding(padding: EdgeInsets.all(8)),
-                            Text(
-                              restaurant.description,
-                              style: const TextStyle(fontSize: 12),
-                              maxLines: 4,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                            AtomExpandableText(text: restaurant.description, maxLines: 4,),
                             const Padding(padding: EdgeInsets.all(8)),
                             const MenuTitle(title: 'Foods'),
                             const Padding(padding: EdgeInsets.all(4)),

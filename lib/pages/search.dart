@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:restaurant_app/models/restaurant.dart';
 import 'package:restaurant_app/services/restaurant_service.dart';
+import 'package:restaurant_app/stores/restaurant_store.dart';
 import 'package:restaurant_app/widgets/organisms/restaurant_list.dart';
 
 class SearchPage extends StatefulWidget {
@@ -13,10 +15,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  late bool _loading = false;
-  late bool _error = false;
   late String _query = '';
-  late List<Restaurant> restaurants = [];
 
   @override
   void initState() {
@@ -26,34 +25,17 @@ class _SearchPageState extends State<SearchPage> {
   // load restaurant data
   loadRestaurant() {
     if (_query == '') return false;
-
-    setLoading(true);
-    setState(() {
-      _error = false;
-    });
-
-    restaurantService
-        .search(_query)
-        .then((RestaurantSearchResponse restaurantListResponse) {
-      setState(() {
-        restaurants = restaurantListResponse.restaurants;
-      });
-    }).catchError((e) {
-      setState(() {
-        _error = true;
-        _loading = false;
-      });
-    }).whenComplete(() => setLoading(false));
-  }
-
-  setLoading(bool loading) {
-    setState(() {
-      _loading = loading;
-    });
+    final restaurantStore = Provider.of<RestaurantStore>(context, listen: false);
+    restaurantStore.fetchSearchRestaurant(_query);
   }
 
   @override
   Widget build(BuildContext context) {
+    final restaurantStore = Provider.of<RestaurantStore>(context, listen: true);
+    final loading = restaurantStore.loading;
+    final error = restaurantStore.error;
+    final restaurants = restaurantStore.searchItems;
+
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -96,7 +78,7 @@ class _SearchPageState extends State<SearchPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              (_error && !_loading)
+              (error && !loading)
                   ? AlertDialog(
                       title: const Text("Ouch! Something happen.."),
                       content: const Text(
@@ -105,7 +87,7 @@ class _SearchPageState extends State<SearchPage> {
               )
                   : Expanded(
                   child: RestaurantList(
-                      restaurants: restaurants, loading: _loading)),
+                      restaurants: restaurants, loading: loading)),
             ]));
   }
 }
