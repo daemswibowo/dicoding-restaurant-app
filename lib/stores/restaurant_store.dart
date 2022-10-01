@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:restaurant_app/models/restaurant.dart';
 import 'package:restaurant_app/services/restaurant_service.dart';
 
