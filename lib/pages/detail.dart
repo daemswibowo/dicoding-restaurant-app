@@ -4,7 +4,9 @@ import 'package:restaurant_app/stores/restaurant_store.dart';
 import 'package:restaurant_app/utils/image_util.dart';
 import 'package:restaurant_app/widgets/atoms/expandable_text.dart';
 import 'package:restaurant_app/widgets/atoms/menu_title.dart';
+import 'package:restaurant_app/widgets/molecules/no_internet_alert.dart';
 import 'package:restaurant_app/widgets/organisms/menu_list.dart';
+import 'package:skeleton_loader/skeleton_loader.dart';
 
 class RestaurantDetailPage extends StatefulWidget {
   static const name = '/detail';
@@ -26,8 +28,9 @@ class _RestaurantDetailState extends State<RestaurantDetailPage> {
 
   // load restaurant data
   loadDetail() async {
-    final restaurantStore = await Provider.of<RestaurantStore>(context, listen: false);
-     restaurantStore.fetchDetail(widget.restaurantId);
+    final restaurantStore =
+        await Provider.of<RestaurantStore>(context, listen: false);
+    restaurantStore.fetchDetail(widget.restaurantId);
   }
 
   @override
@@ -48,16 +51,7 @@ class _RestaurantDetailState extends State<RestaurantDetailPage> {
       ),
       body: SingleChildScrollView(
         child: (error && !loading)
-            ? AlertDialog(
-                title: const Text("Ouch! Something happen.."),
-                content: const Text(
-                    'Cannot get data, please check your internet connection'),
-                actions: [
-                  TextButton(
-                      onPressed: () => loadDetail(),
-                      child: const Text('Try again'))
-                ],
-              )
+            ? Expanded(child: MoleculeNoInternetAlert(onTryAgain: loadDetail))
             : !loading && restaurant != null
                 ? Column(
                     children: [
@@ -84,7 +78,10 @@ class _RestaurantDetailState extends State<RestaurantDetailPage> {
                               style: const TextStyle(fontSize: 12),
                             ),
                             const Padding(padding: EdgeInsets.all(8)),
-                            AtomExpandableText(text: restaurant.description, maxLines: 4,),
+                            AtomExpandableText(
+                              text: restaurant.description,
+                              maxLines: 4,
+                            ),
                             const Padding(padding: EdgeInsets.all(8)),
                             const MenuTitle(title: 'Foods'),
                             const Padding(padding: EdgeInsets.all(4)),
@@ -104,8 +101,54 @@ class _RestaurantDetailState extends State<RestaurantDetailPage> {
                       ),
                     ],
                   )
-                : const Center(child: Text('Loading')),
+                : buildDetailSkeletonLoader(),
       ),
     );
   }
+}
+
+SingleChildScrollView buildDetailSkeletonLoader() {
+  return SingleChildScrollView(
+      padding: const EdgeInsets.all(0),
+      child: SkeletonLoader(
+        builder: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: double.infinity,
+              height: 200,
+              color: Colors.white,
+            ),
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.only(left: 8, right: 8),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Card(
+                      child: SizedBox(width: 200, height: 12),
+                    ),
+                    Card(
+                      child: SizedBox(width: 100, height: 12),
+                    ),
+                    SizedBox(height: 16),
+                    Card(
+                      child: SizedBox(width: double.infinity, height: 12),
+                    ),
+                    Card(
+                      child: SizedBox(width: 200, height: 12),
+                    ),
+                    Card(
+                      child: SizedBox(width: 210, height: 12),
+                    ),
+                    SizedBox(height: 16),
+                  ]),
+            ),
+          ],
+        ),
+        items: 1,
+        period: const Duration(seconds: 2),
+        highlightColor: Colors.white,
+        direction: SkeletonDirection.ltr,
+      ));
 }
