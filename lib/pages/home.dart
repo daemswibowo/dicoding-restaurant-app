@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:restaurant_app/stores/restaurant_store.dart';
 import 'package:restaurant_app/widgets/atoms/home/list_title.dart';
 import 'package:restaurant_app/widgets/molecules/home/app_bar.dart';
+import 'package:restaurant_app/widgets/molecules/no_internet_alert.dart';
 import '../widgets/organisms/restaurant_list.dart';
 
 class HomePage extends StatelessWidget {
@@ -14,7 +15,6 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final restaurantStore = Provider.of<RestaurantStore>(context, listen: true);
     final restaurants = restaurantStore.items;
-
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -32,16 +32,9 @@ class HomePage extends StatelessWidget {
                 child: const ListTitle(),
               ),
               (restaurantStore.error && !restaurantStore.loading)
-                  ? AlertDialog(
-                      title: const Text("Ouch! Something happen.."),
-                      content: const Text(
-                          'Cannot get data, please check your internet connection'),
-                      actions: [
-                        TextButton(
-                            onPressed: () => restaurantStore.fetchRestaurantList(),
-                            child: const Text('Try again'))
-                      ],
-                    )
+                  ? Expanded(
+                      child: MoleculeNoInternetAlert(
+                          onTryAgain: restaurantStore.fetchRestaurantList))
                   : Expanded(
                       child: RestaurantList(
                       restaurants: restaurants,

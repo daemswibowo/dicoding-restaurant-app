@@ -23,7 +23,8 @@ class _SearchPageState extends State<SearchPage> {
   // load restaurant data
   loadRestaurant() {
     if (_query == '') return false;
-    final restaurantStore = Provider.of<RestaurantStore>(context, listen: false);
+    final restaurantStore =
+        Provider.of<RestaurantStore>(context, listen: false);
     restaurantStore.fetchSearchRestaurant(_query);
   }
 
@@ -77,15 +78,20 @@ class _SearchPageState extends State<SearchPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               (error && !loading)
-                  ? AlertDialog(
+                  ? Expanded(
+                      child: AlertDialog(
                       title: const Text("Ouch! Something happen.."),
                       content: const Text(
                           'Cannot get data, please check your internet connection'),
-                actions: [TextButton(onPressed: () => loadRestaurant(), child: const Text('Try again'))],
-              )
+                      actions: [
+                        TextButton(
+                            onPressed: () => loadRestaurant(),
+                            child: const Text('Try again'))
+                      ],
+                    ))
                   : Expanded(
-                  child: RestaurantList(
-                      restaurants: restaurants, loading: loading)),
+                      child: RestaurantList(
+                          restaurants: restaurants, loading: loading)),
             ]));
   }
 }

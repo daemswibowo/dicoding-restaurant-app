@@ -25,10 +25,9 @@ class _RestaurantDetailState extends State<RestaurantDetailPage> {
   }
 
   // load restaurant data
-  loadDetail() {
-    final restaurantStore =
-        Provider.of<RestaurantStore>(context, listen: false);
-    restaurantStore.fetchDetail(widget.restaurantId);
+  loadDetail() async {
+    final restaurantStore = await Provider.of<RestaurantStore>(context, listen: false);
+     restaurantStore.fetchDetail(widget.restaurantId);
   }
 
   @override
