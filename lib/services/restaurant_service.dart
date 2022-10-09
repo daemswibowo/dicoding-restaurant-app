@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:restaurant_app/models/restaurant.dart';
 import 'package:restaurant_app/services/request_adapter_service.dart';
+import 'package:restaurant_app/utils/notification_util.dart';
 
 class RestaurantService extends RequestAdapterService {
   final String _url = "https://restaurant-api.dicoding.dev";
@@ -42,7 +44,8 @@ class RestaurantService extends RequestAdapterService {
   }
 
   Future<RestaurantDetailResponse> detail(String restaurantId) async {
-    final http.Response response = await requestGet("$_url/detail/$restaurantId");
+    final http.Response response =
+        await requestGet("$_url/detail/$restaurantId");
 
     if (response.statusCode == 200) {
       final RestaurantDetailResponse detailResponse =
@@ -54,6 +57,14 @@ class RestaurantService extends RequestAdapterService {
         'response': response.body
       });
     }
+  }
+
+  Future<Restaurant> getRandomRestaurant() async {
+    final RestaurantListResponse response = await list();
+    // get random restaurant index
+    var randomIndex = Random().nextInt(response.restaurants.length);
+
+    return response.restaurants[randomIndex];
   }
 }
 

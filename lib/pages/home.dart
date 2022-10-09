@@ -7,7 +7,7 @@ import 'package:restaurant_app/widgets/molecules/no_internet_alert.dart';
 import '../widgets/organisms/restaurant_list.dart';
 
 class HomePage extends StatelessWidget {
-  static const name = '/home';
+  static const name = '/restaurant';
 
   const HomePage({Key? key}) : super(key: key);
 
