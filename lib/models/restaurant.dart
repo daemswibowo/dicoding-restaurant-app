@@ -2,14 +2,14 @@ import 'package:restaurant_app/models/category.dart';
 import 'package:restaurant_app/models/menu.dart';
 
 class Restaurant {
-  final String id;
-  final String name;
-  final String description;
-  final String pictureId;
-  final String city;
-  final num rating;
-  final Menu? menus;
-  final List<Category>? categories;
+  late String id;
+  late String name;
+  late String description;
+  late String pictureId;
+  late String city;
+  late num rating;
+  late Menu? menus;
+  late List<Category>? categories;
 
   Restaurant({
     required this.id,
@@ -39,6 +39,15 @@ class Restaurant {
     );
   }
 
+  Restaurant.fromMap(Map<String, dynamic> map) {
+    id = map['id'];
+    name = map['name'];
+    description = map['description'];
+    pictureId = map['picture_id'];
+    city = map['city'];
+    rating = map['rating'];
+  }
+
   Map<String, dynamic> toJson() {
     return {
       "id": id,
@@ -47,6 +56,17 @@ class Restaurant {
       "pictureId": pictureId,
       "city": city,
       "rating": rating,
+    };
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'picture_id': pictureId,
+      'city': city,
+      'rating': rating,
     };
   }
 }
