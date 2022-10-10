@@ -3,12 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:restaurant_app/stores/restaurant_store.dart';
 import 'package:restaurant_app/stores/setting_store.dart';
-import 'package:restaurant_app/widgets/atoms/home/list_title.dart';
-import 'package:restaurant_app/widgets/molecules/home/app_bar.dart';
-import 'package:restaurant_app/widgets/molecules/no_internet_alert.dart';
-import '../widgets/organisms/restaurant_list.dart';
 
 class SettingPage extends StatelessWidget {
   static const name = '/setting';

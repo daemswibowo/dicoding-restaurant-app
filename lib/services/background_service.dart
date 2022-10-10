@@ -55,10 +55,6 @@ class BackgroundService {
     _uiSendPort ??= IsolateNameServer.lookupPortByName(_isolateName);
     _uiSendPort?.send(null);
   }
-
-  Future<void> someTask() async {
-    print('Updated data from the background isolate');
-  }
 }
 
 final BackgroundService backgroundService = BackgroundService();

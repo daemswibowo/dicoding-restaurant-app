@@ -45,20 +45,23 @@ class DatabaseHelper {
     final Database db = await database;
     await db.insert(_tableName, restaurant.toMap());
     if (kDebugMode) {
-      print('Data saved');
+      print('Data added to favourite');
     }
   }
 
-  Future<List<Restaurant>> getRestaurants() async {
+  Future<List<Restaurant>> getFavourites() async {
     final Database db = await database;
     List<Map<String, dynamic>> rows = await db.query(_tableName);
 
     return rows.map((row) => Restaurant.fromMap(row)).toList();
   }
 
-  Future<void> deleteRestaurant(String id) async {
+  Future<void> deleteFavourite(String id) async {
     final Database db = await database;
     await db.delete(_tableName, where: 'id = ?', whereArgs: [id]);
+    if (kDebugMode) {
+      print('Data removed from favourite');
+    }
   }
 
   Future<Restaurant> getRestaurantById(String id) async {
@@ -69,3 +72,5 @@ class DatabaseHelper {
     return results.map((res) => Restaurant.fromMap(res)).first;
   }
 }
+
+final databaseHelper = DatabaseHelper();

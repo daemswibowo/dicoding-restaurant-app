@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:restaurant_app/services/background_service.dart';
 import 'package:restaurant_app/stores/setting_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

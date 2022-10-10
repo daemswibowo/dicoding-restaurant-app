@@ -1,17 +1,20 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:restaurant_app/models/restaurant.dart';
 import 'package:restaurant_app/services/restaurant_service.dart';
+import 'package:restaurant_app/utils/database_helper.dart';
 
 class RestaurantStore extends ChangeNotifier {
   final RestaurantService restaurantService;
 
   RestaurantStore({required this.restaurantService}) {
     fetchRestaurantList();
+    getFavourites();
   }
 
   late Restaurant? item = null;
   late List<Restaurant> _items = [];
   late List<Restaurant> searchItems = [];
+  late List<Restaurant> favourites = [];
   late bool loading = false;
   late bool error = false;
 
@@ -42,6 +45,19 @@ class RestaurantStore extends ChangeNotifier {
   void setError(bool value) {
     error = value;
     notifyListeners();
+  }
+
+  Future<void> getFavourites() async {
+    try {
+      final response = await databaseHelper.getFavourites();
+      favourites = response;
+      notifyListeners();
+    } catch (e) {
+      if(kDebugMode) {
+        print('Failed to get favourites');
+        print(e);
+      }
+    }
   }
 
   /// Fetch restaurant data
@@ -93,6 +109,47 @@ class RestaurantStore extends ChangeNotifier {
       setError(true);
     } finally {
       setLoading(false);
+    }
+  }
+
+  Future<void> addToFavourite(Restaurant restaurant) async {
+    try {
+      await databaseHelper.insertFavourite(restaurant);
+
+      favourites.add(restaurant);
+      notifyListeners();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Failed adding to favourite');
+        print(e);
+      }
+    }
+  }
+
+  Future<void> removeFromFavourite(String restaurantId) async {
+    try {
+      await databaseHelper.deleteFavourite(restaurantId);
+      favourites.removeWhere((restaurant) => restaurant.id == restaurantId);
+      notifyListeners();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Failed adding to favourite');
+        print(e);
+      }
+    }
+  }
+
+  Future<void> toggleFavourite(Restaurant restaurant) async {
+    final loved = favourites
+        .indexWhere((favourite) => favourite.id == restaurant.id) >=
+        0;
+
+    if (loved) {
+      // if loved, remove from favourite
+      await removeFromFavourite(restaurant.id);
+    } else {
+      // otherwise, add to favourite
+      await addToFavourite(restaurant);
     }
   }
 }

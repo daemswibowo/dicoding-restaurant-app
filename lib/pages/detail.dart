@@ -39,6 +39,9 @@ class _RestaurantDetailState extends State<RestaurantDetailPage> {
     final loading = restaurantStore.loading;
     final error = restaurantStore.error;
     final restaurant = restaurantStore.item;
+    final bool loved = restaurantStore.favourites
+            .indexWhere((favourite) => favourite.id == widget.restaurantId) >=
+        0;
 
     return Scaffold(
       appBar: AppBar(
@@ -48,6 +51,16 @@ class _RestaurantDetailState extends State<RestaurantDetailPage> {
             : error
                 ? 'Failed'
                 : restaurant?.name ?? 'hello'),
+        actions: !loading
+            ? [
+                TextButton(
+                    onPressed: () async => await restaurantStore.toggleFavourite(restaurant!),
+                    child: Icon(
+                      loved ? Icons.favorite_outlined : Icons.favorite_outline,
+                      color: Colors.pink,
+                    ))
+              ]
+            : [],
       ),
       body: SingleChildScrollView(
         child: (error && !loading)

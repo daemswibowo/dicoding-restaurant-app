@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:restaurant_app/pages/home.dart';
 import 'package:restaurant_app/pages/main.dart';
 import 'package:restaurant_app/routes.dart';
 import 'package:restaurant_app/services/background_service.dart';

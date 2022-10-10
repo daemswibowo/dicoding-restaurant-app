@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/layouts/tab_layout.dart';
+import 'package:restaurant_app/pages/favourites.dart';
 import 'package:restaurant_app/pages/home.dart';
 import 'package:restaurant_app/pages/setting.dart';
 
@@ -16,7 +17,7 @@ class MainPage extends StatelessWidget {
       Icons.settings_outlined,
     ], pages: [
       HomePage(),
-      HomePage(),
+      FavouritesPage(),
       SettingPage(),
     ]);
   }

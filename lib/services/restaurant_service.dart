@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:restaurant_app/models/restaurant.dart';
 import 'package:restaurant_app/services/request_adapter_service.dart';
-import 'package:restaurant_app/utils/notification_util.dart';
 
 class RestaurantService extends RequestAdapterService {
   final String _url = "https://restaurant-api.dicoding.dev";
